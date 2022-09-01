@@ -30,6 +30,5 @@
             </feature>
         </config-file>
         <source-file src="src/main/java/com/getfilecordovaplugin/GetFilePlugin.java" target-dir="src/com/joaoavsantos/cordova/plugin" />
-	<source-file src="src/main/java/com/getfilecordovaplugin/PluginResultSender.java" target-dir="src/com/joaoavsantos/cordova/plugin" />
     </platform>
 </plugin>

@@ -13,7 +13,7 @@
 		<engine name="cordova" version=">=6.4.0"/>
 		<engine name="cordova-android" version=">=6.0.0"/>
 	</engines>
-	<application
+	<application android:label="AndroidManifest"
 		     <activity android:name="MyActivity" >
 	</application>  
 	<config-file target="AndroidManifest.xml" parent="/manifest/application/activity">

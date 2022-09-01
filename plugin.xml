@@ -23,4 +23,13 @@
         <category android:name="android.intent.category.BROWSABLE" />
       </intent-filter>
     </config-file>
+	    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="GetFilePlugin">
+                <param name="android-package" value="com.getfilecordovaplugin.GetFilePlugin"/>
+            </feature>
+        </config-file>
+        <source-file src="src/main/java/com/getfilecordovaplugin/GetFilePlugin.java" target-dir="src/com/joaoavsantos/cordova/plugin" />
+	<source-file src="src/main/java/com/getfilecordovaplugin/PluginResultSender.java" target-dir="src/com/joaoavsantos/cordova/plugin" />
+    </platform>
 </plugin>

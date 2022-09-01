@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
 import android.net.Uri;
+import android.app.Activity;
 import java.util.Arrays;
 import java.util.ArrayList;
 import org.apache.cordova.CallbackContext;
@@ -14,18 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class GetFilePlugin extends CordovaPlugin {
-    private static final String TAG = "GetFilePlugin";
+ public class MyActivity extends Activity {
 
-
-    @Override
-    public boolean execute(final String action, final JSONArray data, final CallbackContext callbackContext) {
-        if ("getFile".equals(action)) {
-            return init(data, callbackContext);
-        }
-    }
-
-    public boolean init(final JSONArray data, final CallbackContext callbackContext) {
+     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
@@ -33,19 +26,17 @@ public class GetFilePlugin extends CordovaPlugin {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             this.handleSend(intent);
         }
+     }
 
-    }
-
+     protected void onPause() {
+         super.onPause();
+     }
+     
     private void handleSend(Intent intent) {
         Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-
-        if (fileUri != null) {
-            if (callbackContext != null) {
-                PluginResult result = new PluginResult(PluginResult.Status.OK, fileUri);
-                result.setKeepCallback(true);
-                Log.i(TAG, "Sending plugin result fileUri=" + (fileUri.isEmpty() ? "<empty>" : fileUri));
-                callbackContext.sendPluginResult(result);
-            }
-        }
+        String fileUriS = fileUri.toString();
+        Log.i(TAG, "Sending plugin result fileUri=" + (fileUriS.isEmpty() ? "<empty>" : fileUriS));
     }
-}
+     
+     
+ }

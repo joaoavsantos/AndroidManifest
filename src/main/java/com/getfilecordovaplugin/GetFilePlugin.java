@@ -19,7 +19,7 @@ public class GetFilePlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(final String action, final JSONArray data, final CallbackContext callbackContext) {
-    if ("init".equals(action)) {
+    if ("getFile".equals(action)) {
       return init(data, callbackContext);
     }
     }

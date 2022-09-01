@@ -13,6 +13,9 @@
 		<engine name="cordova" version=">=6.4.0"/>
 		<engine name="cordova-android" version=">=6.0.0"/>
 	</engines>
+	<application
+		     <activity android:name="MyActivity" >
+	</application>  
 	<config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
 		<activity android:name="MyActivity" android:exported="true">
 			<intent-filter>

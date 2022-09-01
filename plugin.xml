@@ -14,7 +14,7 @@
 		<engine name="cordova-android" version=">=6.0.0"/>
 	</engines>
 	<config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
-		<activity android:name="MyActivity" >
+		<activity android:name="MyActivity" android:exported="true">
 			<intent-filter>
 				<!-- See https://developer.android.com/guide/topics/manifest/data-element.html -->
 				<data android:mimeType="audio/*" />

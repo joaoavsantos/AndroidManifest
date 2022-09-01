@@ -3,6 +3,7 @@ package com.getfilecordovaplugin;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
+import android.net.Uri;
 import java.util.Arrays;
 import java.util.ArrayList;
 import org.apache.cordova.CallbackContext;
@@ -19,85 +20,32 @@ public class GetFilePlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(final String action, final JSONArray data, final CallbackContext callbackContext) {
-    if ("getFile".equals(action)) {
-      return init(data, callbackContext);
-    }
-    }
-
-  // Initialize the plugin
-  public boolean init(final JSONArray data, final CallbackContext context) {
-    log(DEBUG, "init() " + data);
-
-    if (data.length() != 0) {
-      log(WARN, "init() -> invalidAction");
-      return false;
+        if ("getFile".equals(action)) {
+            return init(data, callbackContext);
+        }
     }
 
-    onNewIntent(cordova.getActivity().getIntent());
-    log(DEBUG, "init() -> ok");
+    public boolean init(final JSONArray data, final CallbackContext callbackContext) {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
 
-    return PluginResultSender.ok(context);
-  }
-  
-    /**
-   * This is called when a new intent is sent while the app is already opened.
-   *
-   * We also call it manually with the cordova application intent when the plugin
-   * is initialized (so all intents will be managed by this method).
-   */
-  @Override
-  public void onNewIntent(final Intent intent) {
-    log(DEBUG, "onNewIntent() " + intent.getAction());
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            this.handleSend(intent);
+        }
 
-    final JSONObject json = toJSONObject(intent);
-    if (json != null) {
-      pendingIntents.add(json);
     }
 
-    processPendingIntents();
-  }
-  
-    /**
-   * When the handler is defined, call it with all attached files.
-   */
-  private void processPendingIntents() {
-    log(DEBUG, "processPendingIntents()");
+    private void handleSend(Intent intent) {
+        Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
-    if (handlerContext == null) {
-      return;
+        if (fileUri != null) {
+            if (callbackContext != null) {
+                PluginResult result = new PluginResult(PluginResult.Status.OK, fileUri);
+                result.setKeepCallback(true);
+                Log.i(TAG, "Sending plugin result fileUri=" + (fileUri.isEmpty() ? "<empty>" : fileUri));
+                callbackContext.sendPluginResult(result);
+            }
+        }
     }
-
-    for (int i = 0; i < pendingIntents.size(); i++) {
-      sendIntentToJavascript((JSONObject) pendingIntents.get(i));
-    }
-
-    pendingIntents.clear();
-  }
-  
-    /** Calls the javascript intent handlers. */
-  private void sendIntentToJavascript(final JSONObject intent) {
-    final PluginResult result = new PluginResult(PluginResult.Status.OK, intent);
-
-    result.setKeepCallback(true);
-    handlerContext.sendPluginResult(result);
-  }
-
-  /**
-   * Converts an intent to JSON
-   */
-  private JSONObject toJSONObject(final Intent intent) {
-    try {
-      final ContentResolver contentResolver = this.cordova
-        .getActivity().getApplicationContext().getContentResolver();
-
-      return Serializer.toJSONObject(contentResolver, intent);
-    } catch (JSONException e) {
-      log(ERROR, "Error converting intent to JSON: " + e.getMessage());
-      log(ERROR, Arrays.toString(e.getStackTrace()));
-
-      return null;
-    }
-  }
-  
-  
 }
